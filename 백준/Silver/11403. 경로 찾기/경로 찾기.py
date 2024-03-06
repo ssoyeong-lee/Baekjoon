@@ -4,23 +4,20 @@ input = sys.stdin.readline
 
 n = int(input())
 arr = [list(map(int, input().split())) for _ in range(n)]
-ret = [[0] * n for _ in range(n)]
 
-def bfs(start, end):
+def bfs(start):
+  global visited
   queue = deque([start])
-  visited = [False] * n
 
   while queue:
     now = queue.popleft()
-    if now == end and visited[now]:
-      return 1
     for j in range(n):
       if arr[now][j] == 1 and not visited[j]:
-        visited[j] = True
+        visited[j] = 1
         queue.append(j)
-  return 0
 
+ret = []
 for i in range(n):
-  for j in range(n):
-    ret[i][j] = bfs(i, j)
-  print(*ret[i])
+  visited = [0] * n
+  bfs(i)
+  print(*visited)
