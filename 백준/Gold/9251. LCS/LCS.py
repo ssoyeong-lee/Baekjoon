@@ -5,12 +5,16 @@ input = stdin.readline
 s1 = list(input().rstrip())
 s2 = list(input().rstrip())
 
-dp = [[0] * (len(s1) + 1) for _ in range(len(s2) + 1)]
-
+dp = [0] * (len(s1) + 1)
 for i, ss2 in enumerate(s2):
+  prev = 0
   for j, ss1 in enumerate(s1):
     if ss1 == ss2:
-      dp[i + 1][j + 1] = dp[i][j] + 1
+      tmp = dp[j + 1]
+      dp[j + 1] = prev + 1
+      prev = tmp
     else:
-      dp[i + 1][j + 1] = max(dp[i][j + 1], dp[i + 1][j])
-print(dp[-1][-1])
+      prev = dp[j + 1]
+      dp[j + 1] = max(dp[j], dp[j + 1])
+
+print(dp[-1])
