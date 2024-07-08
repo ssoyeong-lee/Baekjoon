@@ -1,4 +1,6 @@
 from sys import stdin
+from math import ceil
+
 input = stdin.readline
 
 n, k = map(int, input().split())
@@ -12,5 +14,5 @@ for l in li:
 ret = 0
 for s in stud:
   w, m = s
-  ret += w // k + w % k + m // k + m % k
+  ret += ceil(w / k) + ceil(m / k)
 print(ret)
