@@ -1,26 +1,23 @@
-import sys
+from sys import stdin
 from collections import deque
-input = sys.stdin.readline
+input = stdin.readline
 
 n = int(input())
-graph = [list() for _ in range(n + 1)]
-
+edge = [list() for _ in range(n + 1)]
 for _ in range(n - 1):
-  a, b = map(int, input().split())
-  graph[a].append(b)
-  graph[b].append(a)
+  u, v = map(int, input().split())
+  edge[u].append(v); edge[v].append(u)
 
-def bfs(start):
-  parents = [-1] * (n + 1)
-  queue = deque([start])
-  parents[start] = 0
+parent = [-1] * (n + 1)
+def bfs(root):
+  queue = deque([root])
+  parent[root] = 0
   while queue:
-    child = queue.popleft()
-    for c in graph[child]:
-      if parents[c] == -1:
-        parents[c] = child
-        queue.append(c)
-  return parents
+    p = queue.popleft()
+    for child in edge[p]:
+      if parent[child] == -1:
+        parent[child] = p
+        queue.append(child)
 
-ret = bfs(1)
-print(*ret[2:], sep='\n')
+bfs(1)
+print(*parent[2:], sep='\n')
