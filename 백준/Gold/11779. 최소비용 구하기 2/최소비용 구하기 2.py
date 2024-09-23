@@ -1,6 +1,8 @@
 from sys import stdin
 import heapq as hq
 
+input = stdin.readline
+
 def solution(graph, s, e):
   pq = [(0, s)]
   costs = [-1] * len(graph)
@@ -9,15 +11,15 @@ def solution(graph, s, e):
   prev[s] = 0
   
   while pq:
-    cost, a = hq.heappop(pq)
-    if cost > costs[a]:
+    cur_cost, cur_pos = hq.heappop(pq)
+    if cur_cost > costs[cur_pos]:
       continue
-    for b, c in graph[a]:
-      tmp = costs[a] + c
-      if costs[b] == -1 or tmp < costs[b]:
-        costs[b] = tmp
-        hq.heappush(pq, (costs[b], b))
-        prev[b] = a
+    for next_pos, next_cost in graph[cur_pos]:
+      tmp_cost = costs[cur_pos] + next_cost
+      if costs[next_pos] == -1 or tmp_cost < costs[next_pos]:
+        costs[next_pos] =tmp_cost
+        hq.heappush(pq, (costs[next_pos], next_pos))
+        prev[next_pos] = cur_pos
 
   idx = e; cnt = 1; path = [str(e)]
   while idx != s:
