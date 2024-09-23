@@ -10,8 +10,7 @@ def solution(edges, start):
   dist[start] = 0
   
   while uncert:
-    minDist, minV = uncert[0]
-    hq.heappop(uncert)
+    minDist, minV = hq.heappop(uncert)
     if minDist > dist[minV]:
       continue
     for v, w in edges[minV]:
@@ -27,5 +26,4 @@ for _ in range(cntE):
   u, v, w = map(int, input().split())
   edges[u].append([v, w])
 dist = solution(edges, start)
-ret = [d if d != -1 else 'INF' for d in dist]
-print(*ret, sep='\n')
+print(*[d if d != -1 else 'INF' for d in dist], sep='\n')
