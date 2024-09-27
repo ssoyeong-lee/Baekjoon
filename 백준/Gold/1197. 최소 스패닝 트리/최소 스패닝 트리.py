@@ -11,13 +11,15 @@ def solution1(edges):
   for w, v in edges[1]:
     hq.heappush(pq, (w, v))
   
-  ret = 0
-  while pq:
+  ret = 0; cnt = 1
+  while cnt < len(edges) - 1:
     w, v = hq.heappop(pq)
     if visited[v] == True:
       continue
     ret += w
     visited[v] = True
+    cnt += 1
+
     for w1, v1 in edges[v]:
       if visited[v1]:
         continue
