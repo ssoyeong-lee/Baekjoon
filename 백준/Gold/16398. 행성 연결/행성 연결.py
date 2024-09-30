@@ -1,3 +1,4 @@
+import heapq as hq
 from sys import stdin
 input = stdin.readline
 
@@ -39,7 +40,33 @@ def solution(n, costs):
       total += cost
   return total
 
+# Prim
+def solution2(n, costs):
+  visited = [False] * n
+  visited[0] = True
+
+  min_val = [100000000] * n
+  min_val[0] = 0
+
+  pq = []
+  for j in range(1, n):
+    hq.heappush(pq, (costs[0][j], j))
+  
+  ret = 0; cnt = 0
+  while pq and cnt != n - 1:
+    cost, j = hq.heappop(pq)
+    if visited[j] == True:
+      continue
+    ret += cost
+    cnt += 1
+    visited[j] = True
+    for k in range(n):
+      if not visited[k] and costs[j][k] < min_val[k]:
+        hq.heappush(pq, (costs[j][k], k))
+        min_val[k] = costs[j][k]
+  return ret
+
 #input 
 n = int(input())
 costs = [list(map(int, input().split())) for _ in range(n)]
-print(solution(n, costs))
+print(solution2(n, costs))
