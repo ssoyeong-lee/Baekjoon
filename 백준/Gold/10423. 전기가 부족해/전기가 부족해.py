@@ -41,29 +41,34 @@ def find(parent, x):
     parent[x] = find(parent, parent[x])
   return parent[x]
 
-def union(parent, x, y, stations):
+def union(parent, x, y, rank):
   root_x = find(parent, x)
   root_y = find(parent, y)
   if root_x == root_y:
     return
-  if root_x in stations:
-    parent[root_y] = root_x
-  else:
+  if rank[root_x] < rank[root_y]:
     parent[root_x] = root_y
+  else:
+    parent[root_y] = root_x
+    if rank[root_x] == rank[root_y]:
+      rank[root_x] += 1
 
 def solution(n, stations, cable):
   parent = [i for i in range(n + 1)]
-  stations = set(stations)
+  rank = [0] * (n + 1)
+
+  for i in range(1, len(stations)):
+      union(parent, stations[0], stations[i], rank)
+
   cable.sort(key=lambda x:x[2])
 
   ret = 0; cnt = n - len(stations)
   for u, v, w in cable:
     if cnt == 0:
       break
-    root_u, root_v = find(parent, u), find(parent, v)
-    if root_u == root_v or (root_u in stations and root_v in stations):
+    if find(parent, u) == find(parent, v):
       continue
-    union(parent, u, v, stations)
+    union(parent, u, v, rank)
     ret += w
     cnt -= 1
   return ret
