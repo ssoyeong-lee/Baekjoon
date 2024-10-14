@@ -2,17 +2,16 @@ from sys import stdin
 import heapq as hq
 input = stdin.readline
 
-def solution(li):
+def solution(pq):
   solved_pq = [] # cnt, deadline #len(solved_pq) == now
-  pq = [[deadline, cnt * -1] for deadline, cnt in li]
-  hq.heapify(pq)
-
-  while pq:
-    deadline, cnt = hq.heappop(pq)
+  pq.sort(key = lambda x:x[0])
+  
+  for i in range(len(pq)):
+    deadline, cnt = pq[i]
     if len(solved_pq) >= deadline:
-      hq.heappushpop(solved_pq, cnt * -1)
+      hq.heappushpop(solved_pq, cnt)
       continue
-    hq.heappush(solved_pq, cnt * -1)
+    hq.heappush(solved_pq, cnt)
   return sum(solved_pq)
 
 n = int(input())
