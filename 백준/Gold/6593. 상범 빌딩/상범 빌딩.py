@@ -1,55 +1,45 @@
-import sys
 from collections import deque
-input = sys.stdin.readline
+from sys import stdin
+input = stdin.readline
 
-def input_building(l, r, c):
-  ret = []
-  for z in range(l):
-    tmp = []
-    for y in range(r):
-      tmp.append(input().rstrip())
-    ret.append(tmp)
-    input()
-  return ret
+# solution: bfs
+def solution(arr):
+    l, r, c = len(arr), len(arr[0]), len(arr[0][0])
+    dist = [[[-1] * c for _ in range(r)] for __ in range(l)]
+    
+    dq = deque()
+    for z in range(l):
+        for y in range(r):
+            for x in range(c):
+                if arr[z][y][x] == 'S':
+                    dq.append((x, y, z))
+                    dist[z][y][x] = 0
+                    break
+    
+    while dq:
+        x1, y1, z1 = dq.popleft()
+        if arr[z1][y1][x1] == 'E':
+            return dist[z1][y1][x1]
+        for dx, dy, dz in ((1, 0, 0), (0, 1, 0), (0, 0, 1), (-1, 0, 0), (0, -1, 0), (0, 0, -1)):
+            x2, y2, z2 = x1 + dx, y1 + dy, z1 + dz
+            if 0 <= x2 < c and 0 <= y2 < r and 0 <= z2 < l:
+                if dist[z2][y2][x2] == -1 and arr[z2][y2][x2] != '#':
+                    dist[z2][y2][x2] = dist[z1][y1][x1] + 1
+                    dq.append((x2, y2, z2))
+    return -1
 
-def find_start(building, l, r, c):
-  for z in range(l):
-    for y in range(r):
-      for x in range(c):
-        if building[z][y][x] == 'S':
-          return (x, y, z, 0)
-
-def bfs(building, l, r, c):
-  start_point = find_start(building, l, r, c)
-  queue = deque()
-  queue.append(start_point)
-
-  visited = [[[False] * c for _ in range(r)] for __ in range(l)]
-  visited[start_point[2]][start_point[1]][start_point[0]] = True
-
-  while queue:
-    x, y, z, t = queue.popleft()
-    if building[z][y][x] == 'E':
-      return f'Escaped in {t} minute(s).'
-
-    for dx, dy, dz in delta:
-      x1 = x + dx
-      y1 = y + dy
-      z1 = z + dz
-      if 0 <= x1 < c and 0 <= y1 < r and 0 <= z1 < l:
-        if not building[z1][y1][x1] == '#' and not visited[z1][y1][x1]:
-          queue.append((x1, y1, z1, t + 1))
-          visited[z1][y1][x1] = True
-  return 'Trapped!'
-
-delta = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]]
+# input
 ret = []
-
 while True:
-  l, r, c = map(int, input().split())
-  if l == 0 and r == 0 and c == 0:
-    break
-  building = input_building(l, r, c)
-  ret.append(bfs(building, l, r, c))
+    l, r, c = map(int, input().split())
+    if l == r == c == 0:
+        break
 
-print(*ret, sep='\n')
+    arr = []
+    for z in range(l):
+        arr.append([input().rstrip() for _ in range(r)])
+        input()
+    ret.append(solution(arr))
+
+for time in ret:
+    print(f'Escaped in {time} minute(s).' if time != -1 else 'Trapped!')
