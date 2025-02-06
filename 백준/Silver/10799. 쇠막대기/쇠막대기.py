@@ -4,19 +4,18 @@ input = stdin.readline
 def solution(s):
   stack = []
   cnt = 0
-  i = 0
-  while i < len(s):
-    if i + 1 < len(s) and s[i: i + 2] == '()':
-      cnt += len(stack)
-      i += 2
-    elif not stack or s[i] == '(':
+  is_laser = False
+  for i in s:
+    if not stack or i == '(':
       stack.append('(')
-      i += 1
+      is_laser = True
     else:
       stack.pop()
-      cnt += 1
-      i += 1
+      if is_laser:
+        cnt += len(stack)
+      else:
+        cnt += 1
+      is_laser= False
   return cnt
 
-s = input().rstrip()
-print(solution(s))
+print(solution(input().rstrip()))
